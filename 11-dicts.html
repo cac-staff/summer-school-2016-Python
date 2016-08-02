@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Programming with Python</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Programming with Python</h1></a>
+          <h2 class="subtitle">Storing information with Dictionaries</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Understand the key-value dictionary data structure.</li>
+<li>Be able to store and retrieve information from Python dictionaries.</li>
+<li>Be able to iterate through dictionary elements in an ordered manner.</li>
+</ul>
+</div>
+</section>
+<p>Lists and arrays are useful, but don’t cover every use case. One of Python’s best features is its “dictionary” data structure. Whereas a list or array is simply a collection of elements, a dictionary supports key-value storage of data. Put into plain english, it lets you store and retrieve data values by name.</p>
+<p>Let’s create and use a simple dictionary to illustrate this:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># create an empty dictionary, then store 4 values in it</span>
+<span class="bu">dict</span> <span class="op">=</span> {}
+<span class="bu">dict</span>[<span class="st">&#39;a&#39;</span>] <span class="op">=</span> <span class="st">&#39;cheesecake&#39;</span>
+<span class="bu">dict</span>[<span class="st">&#39;b&#39;</span>] <span class="op">=</span> <span class="va">True</span>
+<span class="bu">dict</span>[<span class="st">&#39;c&#39;</span>] <span class="op">=</span> <span class="fl">3.0</span>
+<span class="bu">dict</span>[<span class="st">&#39;d&#39;</span>] <span class="op">=</span> <span class="va">None</span>
+
+<span class="co"># retrieve a value from the dictionary</span>
+<span class="bu">print</span>(<span class="st">&#39;value for a is:&#39;</span>, <span class="bu">dict</span>[<span class="st">&#39;a&#39;</span>])</code></pre></div>
+<pre class="output"><code>value for a is: cheesecake</code></pre>
+<p>What we did here is create a dictionary, store 4 values under the letters a-d, then retrieve element a’s value.</p>
+<p>Note that we could have initialized the dictionary with the following syntax as well:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">dict</span> <span class="op">=</span> {<span class="st">&#39;a&#39;</span>: <span class="st">&#39;cheesecake&#39;</span>, <span class="st">&#39;b&#39;</span>: <span class="va">True</span>, <span class="st">&#39;c&#39;</span>: <span class="fl">3.0</span>, <span class="st">&#39;d&#39;</span>: <span class="va">None</span>}
+<span class="bu">print</span>(<span class="st">&#39;value for a is:&#39;</span>, <span class="bu">dict</span>[<span class="st">&#39;a&#39;</span>])</code></pre></div>
+<pre class="output"><code>value for a is: cheesecake</code></pre>
+<h2 id="using-dictionary-keys">Using dictionary keys</h2>
+<p>What if we wanted to see what was in the dictionary? How do we get all of the names (keys) that data is stored under?</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="bu">dict</span>.keys())</code></pre></div>
+<pre class="output"><code>dict_keys([&#39;c&#39;, &#39;d&#39;, &#39;b&#39;, &#39;a&#39;])</code></pre>
+<p>We can iterate through all of the keys like this:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">for</span> key <span class="op">in</span> <span class="bu">dict</span>.keys():
+    <span class="bu">print</span>(<span class="st">&#39;key:&#39;</span>, key, <span class="st">&#39;- value:&#39;</span>, <span class="bu">dict</span>[key])</code></pre></div>
+<pre class="output"><code>key: b - value: True
+key: d - value: None
+key: c - value: 3.0
+key: a - value: cheesecake</code></pre>
+<p>Note that the output is inherently unordered. If we re-run creating the dictionary, and getting the keys, we will likely see the keys come out in a different order. This, of course raises an obvious question? How do we iterate through keys in order?</p>
+<p>As it turns out, getting the keys in order is as simple as using the sorted() function on the output of <code>dict.keys()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">ordered <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">dict</span>.keys())
+<span class="bu">print</span>(ordered)
+<span class="cf">for</span> key <span class="op">in</span> ordered:
+    <span class="bu">print</span>(<span class="st">&#39;key:&#39;</span>, key, <span class="st">&#39;, value:&#39;</span>, <span class="bu">dict</span>[key])</code></pre></div>
+<pre class="output"><code>[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]
+key: a , value: cheesecake
+key: b , value: True
+key: c , value: 3.0
+key: d , value: None</code></pre>
+<h2 id="using-dictionary-values">Using dictionary values</h2>
+<p>To get the values of the data stored in the dictionary, we can call <code>dict.values()</code>. As before, the output will be inherently unsorted.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="bu">dict</span>.values())</code></pre></div>
+<pre class="output"><code>dict_values([True, None, 3.0, &#39;cheesecake&#39;])</code></pre>
+<h2 id="removing-dictionary-elements">Removing dictionary elements</h2>
+<p>To remove an element AND save its value, we can call <code>dict.pop()</code>.</p>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-37305346-2', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </body>
+</html>
