@@ -93,4 +93,24 @@ dict_values([True, None, 3.0, 'cheesecake'])
 
 ## Removing dictionary elements
 
-To remove an element AND save its value, we can call `dict.pop()`.
+To simply delete a dictionary element, we can use the `del` keyword.
+```{.python}
+del dict['a']
+print(dict.keys())
+```
+```{.output}
+dict_keys(['c', 'd', 'b'])
+```
+
+To remove an element AND save its value, we can call `dict.pop()`. This is particularly useful if we want to do something with a dictionary element, then remove it after we're done with it.
+```{.python}
+bval = dict.pop('b')
+print(bval)
+print(dict.keys)
+```
+```{.output}
+True
+dict_keys(['c', 'd'])
+```
+
+
