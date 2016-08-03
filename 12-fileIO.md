@@ -93,7 +93,7 @@ with open('data/ioExample.fa') as file:
 >FBtr0345894 type=mRNA; loc=X:join(5900861..5901013,5902690..5905399); ID=FBtr0345894; name=Act5C-RE; dbxref=FlyBase:FBtr0345894,FlyBase_Annotation_IDs:CG4027-RE,REFSEQ:NM_001297986; score=15; score_text=Strongly Supported; MD5=538411fdf0fb678c9c68f422d83255db; length=2863; parent=FBgn0000042; release=r6.11; species=Dmel; 
 ```
 
-## Cleaning up input with `split()` and `rstrip()`
+## Cleaning up input
 
 At this point, our simple program prints out the headers for the different DNA sequences, but we don't yet have a way of parsing this information to make it useable (each header is just one gigantic string). To break this data up into more useable chunks, we will use the split() function. `split()` breaks up a string into a list using a delimiter character we specify.
 
