@@ -119,7 +119,7 @@ One thing that to notice is that the end of our lines still have the `\n` charac
 with open('data/ioExample.fa') as file:
     for line in file:
         if line[0] == '>':
-            line = line[1:-1]
+            line = line[1:-3]
             line = line.split(';')
             print(line)
 ```
@@ -141,7 +141,7 @@ data = []
 with open('data/ioExample.fa') as file:
     for line in file:
         if line[0] == '>':
-            line = line[1:-1]
+            line = line[1:-3]
             line = line.split(';')
             data.append(line)
 
@@ -162,7 +162,7 @@ data = []
 with open('data/ioExample.fa') as file:
     for line in file:
         if line[0] == '>':
-            line = line[1:-1]
+            line = line[1:-3]
             line = line.split(';')
             data.append(line)
 
@@ -190,7 +190,7 @@ data = []
 with open('data/ioExample.fa', mode='r') as file:
     for line in file:
         if line[0] == '>':
-            line = line[1:-1]
+            line = line[1:-3]
             line = line.split(';')
             data.append(line)
 

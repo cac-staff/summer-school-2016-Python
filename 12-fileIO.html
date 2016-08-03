@@ -108,7 +108,7 @@ ACGGCTCTGGCATGTGCAAGGCCGGATTTGCCGGAGACGATGCTCCCCGCGCCGTCTTCCCATCGATTGTGGGACGTCCC
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
     <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
         <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
-            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">3</span>]
             line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
             <span class="bu">print</span>(line)</code></pre></div>
 <pre class="output"><code>[&#39;FBtr0070823 type=mRNA&#39;, &#39; loc=X:join(5901982..5902096,5902690..5905227)&#39;, &#39; ID=FBtr0070823&#39;, &#39; name=Act5C-RB&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=50caec406caeac9bd69f481d94bb76b9&#39;, &#39; length=2653&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]
@@ -124,7 +124,7 @@ data <span class="op">=</span> []
 <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
     <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
         <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
-            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">3</span>]
             line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
             data.append(line)
 
@@ -140,7 +140,7 @@ data <span class="op">=</span> []
 <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
     <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
         <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
-            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">3</span>]
             line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
             data.append(line)
 
@@ -162,7 +162,7 @@ data <span class="op">=</span> []
 <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>, mode<span class="op">=</span><span class="st">&#39;r&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
     <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
         <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
-            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">3</span>]
             line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
             data.append(line)
 
