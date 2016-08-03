@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Programming with Python</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Programming with Python</h1></a>
+          <h2 class="subtitle">Reading and writing files</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Understand the difference between package-specific file I/O functions and Python’s file I/O system.</li>
+<li>Learn to write to a file.</li>
+<li>Understand the meaning/use of special characters <code>\t</code> and <code>\n</code>.</li>
+<li>Learn the basics of parsing a file.</li>
+</ul>
+</div>
+</section>
+<p>There are a number of ways to read and write files in Python. In fact, we’ve already used one of these: <code>numpy.loadtxt()</code>. As we’ve seen, Numpy’s <code>loadtxt()</code> function is very useful for reading a tab- or comma-delimited file and storing the results as a Numpy array. That said, <code>numpy.loadtxt()</code> only covers a small number of use cases. <code>numpy.loadtxt()</code> won’t help us if we’re not dealing with numbers, for instance. For cases like these, we will learn make use of Python’s basic file I/O abilities.</p>
+<h2 id="reading-files">Reading files</h2>
+<p>At it’s simplest, we can open a file with the <code>open()</code> function. There is an optional argument for what file opening mode we wish to use- the default is ‘r’ for reading. Let’s open up an sample FASTA file (<code>data/ioExample.fa</code>) for this exercise.</p>
+<p>Although FASTA files are specific to genomics, they are a good example of a raw text format that can’t be handled by the likes of <code>numpy.loadtxt()</code> (there is a SeqIO module from BioPython that handles this easily, but we’re going to pretend that doesn’t exist for the purpose of learning). FASTA files are quite simple in structure- a <code>&gt;</code> provides a label and other information for a nucleotide sequence (these are the letters of the DNA alphabet), then the actual data follows. You can have several sequences like these in a file.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">file</span> <span class="op">=</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>, <span class="st">&#39;r&#39;</span>)</code></pre></div>
+<p>Iterating through lines of the file is quite painless… by default, a for-loop will iterate through all the lines of the file.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+    <span class="bu">print</span>(line)</code></pre></div>
+<pre class="output"><code>&gt;FBtr0070823 type=mRNA; loc=X:join(5901982..5902096,5902690..5905227); ID=FBtr0070823; name=Act5C-RB; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497; score=15; score_text=Strongly Supported; MD5=50caec406caeac9bd69f481d94bb76b9; length=2653; parent=FBgn0000042; release=r6.11; species=Dmel; 
+
+TTTCAGTCGGTTTATTCCAGTCATTCCTTTCAAACCGTGCGGTCGCTTAGCTCAGCCTCGCCACTTGCGTTTACAGTAGT
+
+TTTCACGCCTTGAATTTGTTAAATCGAACAAAAAGCTTACAAAATGTGTGACGAAGAAGTTGCTGCTCTGGTTGTCGACA
+
+[cut rest of file output]</code></pre>
+<p>Notice that there is an extra space between every line in this case. This is caused by two things: each line in the file ends with the <code>\n</code> character (which triggers a new line), and the <code>print()</code> function ends every line with a <code>\n</code> by default (giving us 2 <code>\n</code>s, or 2 line breaks between each line. Let’s fix our program to not add an extra <code>\n</code> when printing things back. We will also close the file at the end of our program with <code>file.close()</code>.</p>
+<p>Our program should now look something like this:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">file</span> <span class="op">=</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>)
+
+<span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+    <span class="bu">print</span>(line, end<span class="op">=</span><span class="st">&#39;&#39;</span>)
+
+<span class="bu">file</span>.close()</code></pre></div>
+<pre class="output"><code>&gt;FBtr0070823 type=mRNA; loc=X:join(5901982..5902096,5902690..5905227); ID=FBtr0070823; name=Act5C-RB; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497; score=15; score_text=Strongly Supported; MD5=50caec406caeac9bd69f481d94bb76b9; length=2653; parent=FBgn0000042; release=r6.11; species=Dmel; 
+TTTCAGTCGGTTTATTCCAGTCATTCCTTTCAAACCGTGCGGTCGCTTAGCTCAGCCTCGCCACTTGCGTTTACAGTAGT
+TTTCACGCCTTGAATTTGTTAAATCGAACAAAAAGCTTACAAAATGTGTGACGAAGAAGTTGCTGCTCTGGTTGTCGACA
+ACGGCTCTGGCATGTGCAAGGCCGGATTTGCCGGAGACGATGCTCCCCGCGCCGTCTTCCCATCGATTGTGGGACGTCCC
+
+[cut rest of file output]</code></pre>
+<h2 id="using-with">Using <code>with</code></h2>
+<p>Remembering to close our files every time we read from them can be a pain. Fortunately, Python has a solution for us: the <code>with</code> keyword. <code>with</code> starts an indented block of text, and once our program leaves this block, Python will automatically close the file. We save the variable name (in this case the filename) using the word <code>as</code>. This is best demonstrated after trying things out ourselves:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="bu">print</span>(line, end<span class="op">=</span><span class="st">&#39;&#39;</span>)</code></pre></div>
+<pre class="output"><code>&gt;FBtr0070823 type=mRNA; loc=X:join(5901982..5902096,5902690..5905227); ID=FBtr0070823; name=Act5C-RB; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497; score=15; score_text=Strongly Supported; MD5=50caec406caeac9bd69f481d94bb76b9; length=2653; parent=FBgn0000042; release=r6.11; species=Dmel;
+TTTCAGTCGGTTTATTCCAGTCATTCCTTTCAAACCGTGCGGTCGCTTAGCTCAGCCTCGCCACTTGCGTTTACAGTAGT
+TTTCACGCCTTGAATTTGTTAAATCGAACAAAAAGCTTACAAAATGTGTGACGAAGAAGTTGCTGCTCTGGTTGTCGACA
+ACGGCTCTGGCATGTGCAAGGCCGGATTTGCCGGAGACGATGCTCCCCGCGCCGTCTTCCCATCGATTGTGGGACGTCCC
+
+[cut rest of file output]</code></pre>
+<p>By now, many of you will have noticed that FASTA files include a header line (that starts with <code>&gt;</code>). Let’s change our program to only print these header lines.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            <span class="bu">print</span>(line, end<span class="op">=</span><span class="st">&#39;&#39;</span>)</code></pre></div>
+<pre class="output"><code>&gt;FBtr0070823 type=mRNA; loc=X:join(5901982..5902096,5902690..5905227); ID=FBtr0070823; name=Act5C-RB; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497; score=15; score_text=Strongly Supported; MD5=50caec406caeac9bd69f481d94bb76b9; length=2653; parent=FBgn0000042; release=r6.11; species=Dmel; 
+&gt;FBtr0070822 type=mRNA; loc=X:join(5900861..5901013,5902690..5904173); ID=FBtr0070822; name=Act5C-RA; dbxref=FlyBase_Annotation_IDs:CG4027-RA,FlyBase:FBtr0070822,REFSEQ:NM_167053,REFSEQ:NM_167053; score=15; score_text=Strongly Supported; MD5=c727ce58ff19fd7683f6319cb502963e; length=1637; parent=FBgn0000042; release=r6.11; species=Dmel; 
+&gt;FBtr0100662 type=mRNA; loc=X:join(5900861..5901013,5902690..5904788); ID=FBtr0100662; name=Act5C-RC; dbxref=FlyBase_Annotation_IDs:CG4027-RC,FlyBase:FBtr0100662,REFSEQ:NM_001014726,REFSEQ:NM_001014726; score=15; score_text=Strongly Supported; MD5=ee68d31c61dc8c920876794d471f9ad6; length=2252; parent=FBgn0000042; release=r6.11; species=Dmel; 
+&gt;FBtr0100663 type=mRNA; loc=X:join(5900861..5901013,5902690..5904464); ID=FBtr0100663; name=Act5C-RD; dbxref=FlyBase_Annotation_IDs:CG4027-RD,FlyBase:FBtr0100663,REFSEQ:NM_001014725,REFSEQ:NM_001014725; score=15; score_text=Strongly Supported; MD5=3006846211d7279213e967e20265cb0b; length=1928; parent=FBgn0000042; release=r6.11; species=Dmel; 
+&gt;FBtr0345894 type=mRNA; loc=X:join(5900861..5901013,5902690..5905399); ID=FBtr0345894; name=Act5C-RE; dbxref=FlyBase:FBtr0345894,FlyBase_Annotation_IDs:CG4027-RE,REFSEQ:NM_001297986; score=15; score_text=Strongly Supported; MD5=538411fdf0fb678c9c68f422d83255db; length=2863; parent=FBgn0000042; release=r6.11; species=Dmel; </code></pre>
+<h2 id="cleaning-up-input-with-split-and-rstrip">Cleaning up input with <code>split()</code> and <code>rstrip()</code></h2>
+<p>At this point, our simple program prints out the headers for the different DNA sequences, but we don’t yet have a way of parsing this information to make it useable (each header is just one gigantic string). To break this data up into more useable chunks, we will use the split() function. <code>split()</code> breaks up a string into a list using a delimiter character we specify.</p>
+<p>Note that we will change the print command to use line breaks again (by removing the <code>end</code> argument). We will break up each line using semicolons as a delimiter.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
+            <span class="bu">print</span>(line)</code></pre></div>
+<pre class="output"><code>[&#39;&gt;FBtr0070823 type=mRNA&#39;, &#39; loc=X:join(5901982..5902096,5902690..5905227)&#39;, &#39; ID=FBtr0070823&#39;, &#39; name=Act5C-RB&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=50caec406caeac9bd69f481d94bb76b9&#39;, &#39; length=2653&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; \n&#39;]
+[&#39;&gt;FBtr0070822 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904173)&#39;, &#39; ID=FBtr0070822&#39;, &#39; name=Act5C-RA&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RA,FlyBase:FBtr0070822,REFSEQ:NM_167053,REFSEQ:NM_167053&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=c727ce58ff19fd7683f6319cb502963e&#39;, &#39; length=1637&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; \n&#39;]
+[&#39;&gt;FBtr0100662 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904788)&#39;, &#39; ID=FBtr0100662&#39;, &#39; name=Act5C-RC&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RC,FlyBase:FBtr0100662,REFSEQ:NM_001014726,REFSEQ:NM_001014726&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=ee68d31c61dc8c920876794d471f9ad6&#39;, &#39; length=2252&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; \n&#39;]
+[&#39;&gt;FBtr0100663 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904464)&#39;, &#39; ID=FBtr0100663&#39;, &#39; name=Act5C-RD&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RD,FlyBase:FBtr0100663,REFSEQ:NM_001014725,REFSEQ:NM_001014725&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=3006846211d7279213e967e20265cb0b&#39;, &#39; length=1928&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; \n&#39;]
+[&#39;&gt;FBtr0345894 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5905399)&#39;, &#39; ID=FBtr0345894&#39;, &#39; name=Act5C-RE&#39;, &#39; dbxref=FlyBase:FBtr0345894,FlyBase_Annotation_IDs:CG4027-RE,REFSEQ:NM_001297986&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=538411fdf0fb678c9c68f422d83255db&#39;, &#39; length=2863&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; \n&#39;]</code></pre>
+<p>One thing that to notice is that the end of our lines still have the <code>\n</code> character, and the line still begins with <code>&gt;</code> (we don’t want that part). We can get rid of these with some clever indexing before we use <code>split()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
+            <span class="bu">print</span>(line)</code></pre></div>
+<pre class="output"><code>[&#39;FBtr0070823 type=mRNA&#39;, &#39; loc=X:join(5901982..5902096,5902690..5905227)&#39;, &#39; ID=FBtr0070823&#39;, &#39; name=Act5C-RB&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=50caec406caeac9bd69f481d94bb76b9&#39;, &#39; length=2653&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]
+[&#39;FBtr0070822 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904173)&#39;, &#39; ID=FBtr0070822&#39;, &#39; name=Act5C-RA&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RA,FlyBase:FBtr0070822,REFSEQ:NM_167053,REFSEQ:NM_167053&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=c727ce58ff19fd7683f6319cb502963e&#39;, &#39; length=1637&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]
+[&#39;FBtr0100662 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904788)&#39;, &#39; ID=FBtr0100662&#39;, &#39; name=Act5C-RC&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RC,FlyBase:FBtr0100662,REFSEQ:NM_001014726,REFSEQ:NM_001014726&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=ee68d31c61dc8c920876794d471f9ad6&#39;, &#39; length=2252&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]
+[&#39;FBtr0100663 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5904464)&#39;, &#39; ID=FBtr0100663&#39;, &#39; name=Act5C-RD&#39;, &#39; dbxref=FlyBase_Annotation_IDs:CG4027-RD,FlyBase:FBtr0100663,REFSEQ:NM_001014725,REFSEQ:NM_001014725&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=3006846211d7279213e967e20265cb0b&#39;, &#39; length=1928&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]
+[&#39;FBtr0345894 type=mRNA&#39;, &#39; loc=X:join(5900861..5901013,5902690..5905399)&#39;, &#39; ID=FBtr0345894&#39;, &#39; name=Act5C-RE&#39;, &#39; dbxref=FlyBase:FBtr0345894,FlyBase_Annotation_IDs:CG4027-RE,REFSEQ:NM_001297986&#39;, &#39; score=15&#39;, &#39; score_text=Strongly Supported&#39;, &#39; MD5=538411fdf0fb678c9c68f422d83255db&#39;, &#39; length=2863&#39;, &#39; parent=FBgn0000042&#39;, &#39; release=r6.11&#39;, &#39; species=Dmel&#39;, &#39; &#39;]</code></pre>
+<p>Excellent, why don’t we try saving each line as an element of a list? The output of this code should be identical to that from before. I’ve added some comments here and there for readability.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># initialize our list</span>
+data <span class="op">=</span> []
+
+<span class="co"># open and parse the file</span>
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
+            data.append(line)
+
+<span class="co"># print back the data</span>
+<span class="cf">for</span> header <span class="op">in</span> data:
+    <span class="bu">print</span>(header)</code></pre></div>
+<h2 id="writing-files">Writing files</h2>
+<p>Writing files is done in an almost identical manner to reading them. To demonstrate this, we will write our data to a file, and separate the data elements with tabs (<code>\t</code>). Note that we absolutely need to manually add in a <code>\n</code> at the end of each line, or all of the data will be written to one line.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># initialize our list</span>
+data <span class="op">=</span> []
+
+<span class="co"># open and parse the file</span>
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
+            data.append(line)
+
+<span class="co"># print back the data</span>
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioOutput.tsv&#39;</span>) <span class="im">as</span> output:
+    <span class="cf">for</span> header <span class="op">in</span> data:
+        <span class="cf">for</span> element <span class="op">in</span> header:
+            output.write(element <span class="op">+</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>)
+        output.write(<span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</code></pre></div>
+<pre class="output"><code>Traceback (most recent call last):
+  File &quot;/home/jeff/Documents/PycharmProjects/swc-sandbox/fastaIO.py&quot;, line 16, in &lt;module&gt;
+    output.write(element + &#39;\t&#39;)
+io.UnsupportedOperation: not writable</code></pre>
+<p>Oh no, it looks like Python isn’t letting us write to the file! The reason for this is that we need to call <code>open()</code> with the optional <code>mode</code> argument. Specifically, we must use <code>mode='w'</code> to indicate we wish to write to the file (the default mode is <code>'r'</code>) for reading.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># initialize our list</span>
+data <span class="op">=</span> []
+
+<span class="co"># open and parse the file</span>
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioExample.fa&#39;</span>, mode<span class="op">=</span><span class="st">&#39;r&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:
+    <span class="cf">for</span> line <span class="op">in</span> <span class="bu">file</span>:
+        <span class="cf">if</span> line[<span class="dv">0</span>] <span class="op">==</span> <span class="st">&#39;&gt;&#39;</span>:
+            line <span class="op">=</span> line[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]
+            line <span class="op">=</span> line.split(<span class="st">&#39;;&#39;</span>)
+            data.append(line)
+
+<span class="co"># print back the data</span>
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/ioOutput.tsv&#39;</span>, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> output:
+    <span class="cf">for</span> header <span class="op">in</span> data:
+        <span class="cf">for</span> element <span class="op">in</span> header:
+            output.write(element <span class="op">+</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>)
+        output.write(<span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</code></pre></div>
+<p>The file produced should look like this:</p>
+<pre class="output"><code>FBtr0070823 type=mRNA    loc=X:join(5901982..5902096,5902690..5905227)   ID=FBtr0070823  name=Act5C-RB   dbxref=FlyBase_Annotation_IDs:CG4027-RB,FlyBase:FBtr0070823,REFSEQ:NM_078497,REFSEQ:NM_078497,REFSEQ:NM_078497  score=15    score_text=Strongly Supported   MD5=50caec406caeac9bd69f481d94bb76b9    length=2653     parent=FBgn0000042  release=r6.11   species=Dmel       
+FBtr0070822 type=mRNA    loc=X:join(5900861..5901013,5902690..5904173)   ID=FBtr0070822  name=Act5C-RA   dbxref=FlyBase_Annotation_IDs:CG4027-RA,FlyBase:FBtr0070822,REFSEQ:NM_167053,REFSEQ:NM_167053   score=15    score_text=Strongly Supported   MD5=c727ce58ff19fd7683f6319cb502963e    length=1637     parent=FBgn0000042  release=r6.11   species=Dmel       
+FBtr0100662 type=mRNA    loc=X:join(5900861..5901013,5902690..5904788)   ID=FBtr0100662  name=Act5C-RC   dbxref=FlyBase_Annotation_IDs:CG4027-RC,FlyBase:FBtr0100662,REFSEQ:NM_001014726,REFSEQ:NM_001014726     score=15    score_text=Strongly Supported   MD5=ee68d31c61dc8c920876794d471f9ad6    length=2252     parent=FBgn0000042  release=r6.11   species=Dmel       
+FBtr0100663 type=mRNA    loc=X:join(5900861..5901013,5902690..5904464)   ID=FBtr0100663  name=Act5C-RD   dbxref=FlyBase_Annotation_IDs:CG4027-RD,FlyBase:FBtr0100663,REFSEQ:NM_001014725,REFSEQ:NM_001014725     score=15    score_text=Strongly Supported   MD5=3006846211d7279213e967e20265cb0b    length=1928     parent=FBgn0000042  release=r6.11   species=Dmel       
+FBtr0345894 type=mRNA    loc=X:join(5900861..5901013,5902690..5905399)   ID=FBtr0345894  name=Act5C-RE   dbxref=FlyBase:FBtr0345894,FlyBase_Annotation_IDs:CG4027-RE,REFSEQ:NM_001297986     score=15    score_text=Strongly Supported   MD5=538411fdf0fb678c9c68f422d83255db    length=2863     parent=FBgn0000042  release=r6.11   species=Dmel       
+</code></pre>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="applying-the-concepts"><span class="glyphicon glyphicon-pencil"></span>Applying the concepts</h2>
+</div>
+<div class="panel-body">
+<p>It looks like there is a lot of redundant information in our file. Everything to the right of the <code>=</code> signs is useful, the stuff to the left of the <code>=</code> is just a label. Find a way to write only the stuff to the right of the equal signs.</p>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="appending-to-a-file"><span class="glyphicon glyphicon-pencil"></span>Appending to a file</h2>
+</div>
+<div class="panel-body">
+<p>Notice how our file we just wrote completely overwrote the previous contents of the file. Can you find a way to append to the end of a file instead?</p>
+<p>Hint: check the <code>mode</code> argument of the <code>open()</code> documentation.</p>
+</div>
+</section>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-37305346-2', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </body>
+</html>
