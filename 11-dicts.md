@@ -113,4 +113,30 @@ True
 dict_keys(['c', 'd'])
 ```
 
+What happens if we attempt to get piece of data for which there is no key? Keys `'a'` and `'b'` no longer exist in our dictionary, let's try to get one of their values (even though they are gone).
+```{.python}
+print(dict['a'])
+```
+```{.output}
+Traceback (most recent call last):
+  File "/home/jeff/Documents/PycharmProjects/swc-sandbox/dicts.py", line 39, in <module>
+    print(dict['a'])
+KeyError: 'a'
+```
+
+A KeyError is thrown when we use a key that does not exist. With this information, we now know how to avoid these types of errors (don't attempt to use keys that don't exist).
+
+Anyhow, to finish, lets remove all of the dictionary's values in one fell swoop with `dict.clear()`. We can monitor the size of our dictionary with `len()` before and after the operation.
+
+```{.python}
+print(len(dict))
+dict.clear()
+print(len(dict))
+print(dict.keys())
+```
+```{.output}
+2
+dict_keys([])
+0
+```
 

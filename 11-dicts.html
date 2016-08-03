@@ -84,7 +84,31 @@ key: d , value: None</code></pre>
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="bu">dict</span>.values())</code></pre></div>
 <pre class="output"><code>dict_values([True, None, 3.0, &#39;cheesecake&#39;])</code></pre>
 <h2 id="removing-dictionary-elements">Removing dictionary elements</h2>
-<p>To remove an element AND save its value, we can call <code>dict.pop()</code>.</p>
+<p>To simply delete a dictionary element, we can use the <code>del</code> keyword.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">del</span> <span class="bu">dict</span>[<span class="st">&#39;a&#39;</span>]
+<span class="bu">print</span>(<span class="bu">dict</span>.keys())</code></pre></div>
+<pre class="output"><code>dict_keys([&#39;c&#39;, &#39;d&#39;, &#39;b&#39;])</code></pre>
+<p>To remove an element AND save its value, we can call <code>dict.pop()</code>. This is particularly useful if we want to do something with a dictionary element, then remove it after we’re done with it.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">bval <span class="op">=</span> <span class="bu">dict</span>.pop(<span class="st">&#39;b&#39;</span>)
+<span class="bu">print</span>(bval)
+<span class="bu">print</span>(<span class="bu">dict</span>.keys)</code></pre></div>
+<pre class="output"><code>True
+dict_keys([&#39;c&#39;, &#39;d&#39;])</code></pre>
+<p>What happens if we attempt to get piece of data for which there is no key? Keys <code>'a'</code> and <code>'b'</code> no longer exist in our dictionary, let’s try to get one of their values (even though they are gone).</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="bu">dict</span>[<span class="st">&#39;a&#39;</span>])</code></pre></div>
+<pre class="output"><code>Traceback (most recent call last):
+  File &quot;/home/jeff/Documents/PycharmProjects/swc-sandbox/dicts.py&quot;, line 39, in &lt;module&gt;
+    print(dict[&#39;a&#39;])
+KeyError: &#39;a&#39;</code></pre>
+<p>A KeyError is thrown when we use a key that does not exist. With this information, we now know how to avoid these types of errors (don’t attempt to use keys that don’t exist).</p>
+<p>Anyhow, to finish, lets remove all of the dictionary’s values in one fell swoop with <code>dict.clear()</code>. We can monitor the size of our dictionary with <code>len()</code> before and after the operation.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="bu">len</span>(<span class="bu">dict</span>))
+<span class="bu">dict</span>.clear()
+<span class="bu">print</span>(<span class="bu">len</span>(<span class="bu">dict</span>))
+<span class="bu">print</span>(<span class="bu">dict</span>.keys())</code></pre></div>
+<pre class="output"><code>2
+dict_keys([])
+0</code></pre>
         </div>
       </div>
       </article>
